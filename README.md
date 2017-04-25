@@ -8,23 +8,41 @@ go get github.com/srikanth2212/jsonez
 ## Usage:
 
 ## How to parse and query:
-	input := []byte(`{
-		"outer":	{
-				"val1":	"foo",
-				"val2":	"bar",
-				"val3":	1234,
-				"val4":	225.1245,
-				"val5":	[
-							1,
-							2,
-							3,
-							4,
-							5
-				]
-			}
-		}`)
+```go
+...
+input := []byte(`{
+   "outer": {
+	"val1":	"foo",
+	"val2":	"bar",
+	"val3":	1234,
+	"val4":	225.1245,
+	"val5":	[
+	 	1,
+		2,
+		3,
+		4,
+		5
+	]
+  }
+}`)
 
-	g, err := GoJSONParse(input)
+g, err := GoJSONParse(input)
+...
+```
   
-  To fetch the json output in []byte from GoJSON object:
-  output := GoJSONPrint(g)
+To fetch the json output in []byte from GoJSON object:
+...
+```
+output := GoJSONPrint(g)
+...
+```
+
+To fetch a child object:
+...
+```
+o, err := g.Get("outer", "val1")
+...
+```
+
+
+
