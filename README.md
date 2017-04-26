@@ -6,8 +6,7 @@ jsonez provides a simple interface to parse, manipulate and emit arbitrary JSON 
 go get github.com/srikanth2212/jsonez
 ```
 ## Usage:
-```go
-
+```
 The following JSON types are defined:
 /*
  * JSON types
@@ -39,24 +38,24 @@ input := []byte(`{
 }`)
 
 g, err := GoJSONParse(input)
-...
+
 ```
   
 To fetch the json output in []byte from GoJSON object:
-...
+
 ```
 output := GoJSONPrint(g)
-...
+
 ```
 
 To get a child object:
-```go
+```
 o, err := g.Get("outer", "val1")
-...
+
 ```
 
 Adding a new child by value:
-```go
+```
 err = g.AddVal(100, "outer", "val6")
 
 err = g.AddVal(245.67, "outer", "val7")
@@ -65,12 +64,10 @@ err = g.AddVal("hello world", "outer", "val8")
 
 err = g.AddVal(true, "outer", "val9")
 
-...
 ```
 
 Adding an array:
-```go
-
+```
 /*
  * The API will create the array object val10 and
  * populates 100 as its first element
@@ -85,12 +82,10 @@ err = g.AddToArray(200.25, "outer", "val10")
 err = g.AddToArray("hello world", "outer", "val10")
 
 err = g.AddToArray(true, "outer", "val10")
-
-...
 ```
 
 Printing the JSON output after the above operations:
-```go
+```
 fmt.Println(string(GoJSONPrint(g)))
 
 will produce the follwing output:
@@ -120,15 +115,14 @@ will produce the follwing output:
 		]
 	}
 }
-...
 ```
 Query for child object:
-```go
+```
 child, err = g.Get("outer", "val9")
-...
+
 ```
 Getting the value of a child based on type:
-```go
+```
 i, err = g.GetIntVal("outer", "val6")
 
 d, err := g.GetDoubleVal("outer", "val7")
@@ -136,30 +130,30 @@ d, err := g.GetDoubleVal("outer", "val7")
 d, err := g.GetStringVal("outer", "val8")
 
 d, err := g.GetbooleVal("outer", "val9")
-...
+
 ```
 
 Getting the child object at a specific array index:
-```go
+```
 entry, err := arr.GetArrayElemByIndex(1)
-...
+
 ```
 Getting the child object based on value (works only for types int, double, string and bool):
-```go
+```
 entry, err := arr.GetArrayEntry(100, JSON_INT)
-...
+
 ```
 
 Deleting an Array element based on Index:
-```go
+```
 arr, err := g.Get("outer", "val10")
 
 err = arr.DelIndexFromArray(3)
 
-...
+
 ```
 The resultant JSON is:
-```go
+```
 {
 	"outer": {
 		"val1": "foo",
@@ -184,16 +178,16 @@ The resultant JSON is:
 		]
 	}
 }
-...
+
 ```
 
 Deleting an array element based on value (works only for types int, double, string and bool):
-```go
+```
 err = g.DelFromArray(3, "outer", "val5")
-...
+
 ```
 The resultant JSON is:
-```go
+```
 {
 	"outer": {
 		"val1": "foo",
