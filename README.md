@@ -6,10 +6,22 @@ jsonez provides a simple interface to parse, manipulate and emit arbitrary JSON 
 go get github.com/srikanth2212/jsonez
 ```
 ## Usage:
-
-## How to parse and query:
 ```go
-...
+
+The following JSON types are defined:
+/*
+ * JSON types
+ */
+const (
+	JSON_BOOL = iota
+	JSON_NULL
+	JSON_INT
+	JSON_DOUBLE
+	JSON_STRING
+	JSON_ARRAY
+	JSON_OBJECT
+)
+
 input := []byte(`{
    "outer": {
 	"val1":	"foo",
@@ -79,6 +91,9 @@ err = g.AddToArray(true, "outer", "val10")
 
 Printing the JSON output after the above operations:
 ```go
+fmt.Println(string(GoJSONPrint(g)))
+
+will produce the follwing output:
 
 {
 	"outer": {
@@ -107,7 +122,61 @@ Printing the JSON output after the above operations:
 }
 ...
 ```
+Query for child object:
+```go
+child, err = g.Get("outer", "val9")
+...
+```
+Get the value of a child based on type:
+```go
+i, err = g.GetIntVal("outer", "val6")
 
+d, err := g.GetDoubleVal("outer", "val7")
 
+d, err := g.GetStringVal("outer", "val8")
 
+d, err := g.GetbooleVal("outer", "val9")
+...
+```
+
+Get the child object at a specific array index:
+```go
+entry, err := arr.GetArrayElemByIndex(1)
+...
+```
+Get the child object based on value (works only for types int, double, string and bool):
+```go
+entry, err := arr.GetArrayEntry(100, JSON_INT)
+...
+```
+
+Delete an object based on path:
+```go
+err = g.DelVal("outer", "val10")
+...
+```
+Printing the resultant JSON:
+```go
+fmt.Println(string(GoJSONPrint(g)))
+{
+	"outer": {
+		"val1": "foo",
+		"val2": "bar",
+		"val3": 1234,
+		"val4": 2.251245E+02,
+		"val5": [
+			1,
+			2,
+			3,
+			4,
+			5
+		],
+		"val6": 100,
+		"val7": 2.4567E+02,
+		"val8": "hello world",
+		"val9": true
+	}
+}
+...
+```
 
