@@ -41,7 +41,7 @@ g, err := GoJSONParse(input)
 
 ```
   
-To fetch the json output in []byte from GoJSON object:
+To fetch the json output as []byte from the root GoJSON object:
 
 ```
 output := GoJSONPrint(g)
