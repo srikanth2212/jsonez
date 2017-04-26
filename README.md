@@ -127,7 +127,7 @@ Query for child object:
 child, err = g.Get("outer", "val9")
 ...
 ```
-Get the value of a child based on type:
+Getting the value of a child based on type:
 ```go
 i, err = g.GetIntVal("outer", "val6")
 
@@ -139,23 +139,96 @@ d, err := g.GetbooleVal("outer", "val9")
 ...
 ```
 
-Get the child object at a specific array index:
+Getting the child object at a specific array index:
 ```go
 entry, err := arr.GetArrayElemByIndex(1)
 ...
 ```
-Get the child object based on value (works only for types int, double, string and bool):
+Getting the child object based on value (works only for types int, double, string and bool):
 ```go
 entry, err := arr.GetArrayEntry(100, JSON_INT)
 ...
 ```
 
-Delete an object based on path:
+Deleting an Array element based on Index:
 ```go
-err = g.DelVal("outer", "val10")
+arr, err := g.Get("outer", "val10")
+
+err = arr.DelIndexFromArray(3)
+
 ...
 ```
-Printing the resultant JSON:
+The resultant JSON is:
+```go
+{
+	"outer": {
+		"val1": "foo",
+		"val2": "bar",
+		"val3": 1234,
+		"val4": 2.251245E+02,
+		"val5": [
+			1,
+			2,
+			3,
+			4,
+			5
+		],
+		"val6": 100,
+		"val7": 2.4567E+02,
+		"val8": "hello world",
+		"val9": true,
+		"val10": [
+			100,
+			2.0025E+02,
+			"hello world"
+		]
+	}
+}
+...
+```
+
+Deleting an array element based on value (works only for types int, double, string and bool):
+```go
+err = g.DelFromArray(3, "outer", "val5")
+...
+```
+The resultant JSON is:
+```go
+{
+	"outer": {
+		"val1": "foo",
+		"val2": "bar",
+		"val3": 1234,
+		"val4": 2.251245E+02,
+		"val5": [
+			1,
+			2,
+			4,
+			5
+		],
+		"val6": 100,
+		"val7": 2.4567E+02,
+		"val8": "hello world",
+		"val9": true,
+		"val10": [
+			100,
+			2.0025E+02,
+			"hello world"
+		]
+	}
+}
+
+...
+```
+
+
+Deleting an object based on path:
+```go
+err = g.DelVal("outer", "val10")
+
+...
+```
+The resultant JSON is:
 ```go
 fmt.Println(string(GoJSONPrint(g)))
 {
