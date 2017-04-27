@@ -41,33 +41,33 @@ type GoJSON struct {
 	Jsontype int
 
 	/**
-	 * valuestring will be set when
+	 * Valstr will be set when
 	 *type is JSON_STRING
 	 */
-	valuestring string
+	Valstr string
 
 	/**
-	 * valueint will be set when type
+	 * Valint will be set when type
 	 * is JSON_INT
 	 */
-	valueint int
+	Valint int
 
 	/**
 	 * valuenum will be set when
 	 * type is JSON_DOUBLE
 	 */
-	valuedouble float64
+	Valdouble float64
 
 	/**
-	 * valuebool will be set when
+	 * Valbool will be set when
 	 * type is JSON_BOOL
 	 */
-	valuebool bool
+	Valbool bool
 
 	/**
 	 * JSON Key
 	 */
-	key string
+	Key string
 }
 
 /**
@@ -114,7 +114,7 @@ func parseString(cur *GoJSON, input []byte) ([]byte, error) {
 	}
 
 	cur.Jsontype = JSON_STRING
-	cur.valuestring = strings.Trim(string(input[1:offset]), " ")
+	cur.Valstr = strings.Trim(string(input[1:offset]), " ")
 
 	return input[offset+1:], nil
 }
@@ -200,10 +200,10 @@ func parseNumber(cur *GoJSON, input []byte) ([]byte, error) {
 	n = sign * n * math.Pow(10.0, scale+float64(subscale)*float64(signsubscale))
 
 	if isDouble == true {
-		cur.valuedouble = n
+		cur.Valdouble = n
 		cur.Jsontype = JSON_DOUBLE
 	} else {
-		cur.valueint = int(n)
+		cur.Valint = int(n)
 		cur.Jsontype = JSON_INT
 	}
 
@@ -337,8 +337,8 @@ func parseObject(cur *GoJSON, input []byte) ([]byte, error) {
 		return []byte{}, err
 	}
 
-	child.key = child.valuestring
-	child.valuestring = ""
+	child.Key = child.Valstr
+	child.Valstr = ""
 
 	/*
 	 * Fetch the location of ':' after the object key
@@ -384,8 +384,8 @@ func parseObject(cur *GoJSON, input []byte) ([]byte, error) {
 				return []byte{}, err
 			}
 
-			child.key = child.valuestring
-			child.valuestring = ""
+			child.Key = child.Valstr
+			child.Valstr = ""
 
 			/*
 			 * Fetch the location of ':' after the object key
@@ -444,13 +444,13 @@ func parseValue(cur *GoJSON, input []byte) ([]byte, error) {
 
 	if strings.Compare(string(input[:5]), "false") == 0 {
 		cur.Jsontype = JSON_BOOL
-		cur.valuebool = false
+		cur.Valbool = false
 		return input[5:], nil
 	}
 
 	if strings.Compare(string(input[:4]), "true") == 0 {
 		cur.Jsontype = JSON_BOOL
-		cur.valuebool = true
+		cur.Valbool = true
 		return input[4:], nil
 	}
 

@@ -37,7 +37,7 @@ func AllocNull() *GoJSON {
 func AllocString(val string) *GoJSON {
 	child := new(GoJSON)
 
-	child.valuestring = val
+	child.Valstr = val
 	child.Jsontype = JSON_STRING
 
 	return child
@@ -51,9 +51,9 @@ func AllocBool(val bool) *GoJSON {
 
 	child.Jsontype = JSON_BOOL
 	if val == false {
-		child.valuebool = false
+		child.Valbool = false
 	} else {
-		child.valuebool = true
+		child.Valbool = true
 	}
 
 	return child
@@ -66,10 +66,10 @@ func AllocNumber(val float64, numtype int) *GoJSON {
 	child := new(GoJSON)
 
 	if numtype == JSON_INT {
-		child.valueint = int(val)
+		child.Valint = int(val)
 		child.Jsontype = JSON_INT
 	} else {
-		child.valuedouble = val
+		child.Valdouble = val
 		child.Jsontype = JSON_DOUBLE
 	}
 

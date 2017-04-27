@@ -39,10 +39,10 @@ func TestSimpleParse(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("%s: key val1 not found", funcName())
-	} else if strings.Compare(o.valuestring, "foo") != 0 {
-		t.Errorf("%s: key val1 has incorrect value %s", funcName(), o.valuestring)
+	} else if strings.Compare(o.Valstr, "foo") != 0 {
+		t.Errorf("%s: key val1 has incorrect value %s", funcName(), o.Valstr)
 	} else {
-		t.Logf("%s: key val1 has the correct value %s", funcName(), o.valuestring)
+		t.Logf("%s: key val1 has the correct value %s", funcName(), o.Valstr)
 	}
 
 	_, err = g.GetIntVal("outer", "val1")
@@ -626,8 +626,8 @@ func TestBuilder(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("%s: Searching for array entry at location 1 failed with error %s", funcName(), err)
-	} else if entry.valuedouble != 200.25 {
-		t.Errorf("%s: Array entry at location is %f while expeced is 200.25", funcName(), entry.valuedouble)
+	} else if entry.Valdouble != 200.25 {
+		t.Errorf("%s: Array entry at location is %f while expeced is 200.25", funcName(), entry.Valdouble)
 	} else {
 		t.Logf("%s Value 200.25 found at location 1", funcName())
 	}

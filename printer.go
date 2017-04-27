@@ -13,10 +13,10 @@ func printNumber(cur *GoJSON) []byte {
 
 	switch cur.Jsontype {
 	case JSON_DOUBLE:
-		return []byte(strconv.FormatFloat(cur.valuedouble, 'E', -1, 64))
+		return []byte(strconv.FormatFloat(cur.Valdouble, 'E', -1, 64))
 
 	case JSON_INT:
-		return []byte(strconv.FormatInt(int64(cur.valueint), 10))
+		return []byte(strconv.FormatInt(int64(cur.Valint), 10))
 	}
 
 	return []byte{}
@@ -111,7 +111,7 @@ func printObject(cur *GoJSON, depth, fmt int) []byte {
 			}
 
 			output = append(output, '"')
-			output = append(output, []byte(child.key)...)
+			output = append(output, []byte(child.Key)...)
 			output = append(output, '"')
 
 			output = append(output, ':')
@@ -157,7 +157,7 @@ func printValue(cur *GoJSON, depth, fmt int) []byte {
 		return output
 
 	case JSON_BOOL:
-		if cur.valuebool == false {
+		if cur.Valbool == false {
 			output = append(output, []byte("false")...)
 		} else {
 			output = append(output, []byte("true")...)
@@ -172,7 +172,7 @@ func printValue(cur *GoJSON, depth, fmt int) []byte {
 
 	case JSON_STRING:
 		output = append(output, '"')
-		output = append(output, []byte(cur.valuestring)...)
+		output = append(output, []byte(cur.Valstr)...)
 		output = append(output, '"')
 		return output
 
