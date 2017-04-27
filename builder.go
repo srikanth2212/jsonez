@@ -110,7 +110,7 @@ func (g *GoJSON) GetArraySize() int {
 func (g *GoJSON) GetArrayElemByIndex(loc int) (*GoJSON, error) {
 	var child *GoJSON
 
-	if g.jsontype != JSON_ARRAY {
+	if g.Jsontype != JSON_ARRAY {
 		errorStr := fmt.Sprintf("%s: Parsing Error", funcName())
 		return nil, errors.New(errorStr)
 	}
@@ -132,10 +132,10 @@ func (g *GoJSON) GetArrayElemByIndex(loc int) (*GoJSON, error) {
 /**
  * Method to get an array entry based on the value of the element
  */
-func (g *GoJSON) GetArrayEntry(val interface{}, jsontype int) (*GoJSON, error) {
+func (g *GoJSON) GetArrayEntry(val interface{}, Jsontype int) (*GoJSON, error) {
 	var child *GoJSON
 
-	if g.jsontype != JSON_ARRAY {
+	if g.Jsontype != JSON_ARRAY {
 		errorStr := fmt.Sprintf("%s: Parsing Error", funcName())
 		return nil, errors.New(errorStr)
 	}
@@ -144,7 +144,7 @@ func (g *GoJSON) GetArrayEntry(val interface{}, jsontype int) (*GoJSON, error) {
 
 	for {
 		if child != nil {
-			switch jsontype {
+			switch Jsontype {
 			case JSON_INT:
 				if child.valueint == val.(int) {
 					return child, nil
@@ -241,9 +241,9 @@ func (g *GoJSON) DelIndexFromArray(index int) error {
 /**
  * Method to get an array entry based on the value of the element
  */
-func (g *GoJSON) DelArrayEntry(val interface{}, jsontype int) error {
+func (g *GoJSON) DelArrayEntry(val interface{}, Jsontype int) error {
 	var elem *GoJSON
-	elem, err := g.GetArrayEntry(val, jsontype)
+	elem, err := g.GetArrayEntry(val, Jsontype)
 
 	if err != nil {
 		return err
@@ -288,7 +288,7 @@ func (g *GoJSON) GetIntVal(keys ...string) (int, error) {
 		}
 	}
 
-	if cur.jsontype != JSON_INT {
+	if cur.Jsontype != JSON_INT {
 		errorStr := fmt.Sprintf("%s: key %s is not of type int", funcName(), cur.key)
 		return 0, errors.New(errorStr)
 	}
@@ -311,7 +311,7 @@ func (g *GoJSON) GetDoubleVal(keys ...string) (float64, error) {
 		}
 	}
 
-	if cur.jsontype != JSON_DOUBLE {
+	if cur.Jsontype != JSON_DOUBLE {
 		errorStr := fmt.Sprintf("%s: key %s is not of type double", funcName(), cur.key)
 		return 0, errors.New(errorStr)
 	}
@@ -334,7 +334,7 @@ func (g *GoJSON) GetBoolVal(keys ...string) (bool, error) {
 		}
 	}
 
-	if cur.jsontype != JSON_BOOL {
+	if cur.Jsontype != JSON_BOOL {
 		errorStr := fmt.Sprintf("%s: key %s is not of type double", funcName(), cur.key)
 		return false, errors.New(errorStr)
 	}
@@ -357,7 +357,7 @@ func (g *GoJSON) GetStringVal(keys ...string) (string, error) {
 		}
 	}
 
-	if cur.jsontype != JSON_STRING {
+	if cur.Jsontype != JSON_STRING {
 		errorStr := fmt.Sprintf("%s: key %s is not of type double", funcName(), cur.key)
 		return "", errors.New(errorStr)
 	}
@@ -451,7 +451,7 @@ func (g *GoJSON) AddToArray(val interface{}, paths ...string) error {
 	} else {
 		arr = cur
 
-		if arr.jsontype != JSON_ARRAY {
+		if arr.Jsontype != JSON_ARRAY {
 			errorStr := fmt.Sprintf("%s: GoJSON object with key %s is not of type array", funcName(), key)
 			return errors.New(errorStr)
 		}
@@ -507,7 +507,7 @@ func (g *GoJSON) DelVal(paths ...string) error {
 		}
 	}
 
-	if prev.jsontype != JSON_OBJECT {
+	if prev.Jsontype != JSON_OBJECT {
 		errorStr := fmt.Sprintf("%s: %s is not a json object", funcName(), prev.key)
 		return errors.New(errorStr)
 	}
@@ -537,7 +537,7 @@ func (g *GoJSON) DelFromArray(val interface{}, paths ...string) error {
 		}
 	}
 
-	if cur.jsontype != JSON_ARRAY {
+	if cur.Jsontype != JSON_ARRAY {
 		errorStr := fmt.Sprintf("%s: %s is not a json array", funcName(), cur.key)
 		return errors.New(errorStr)
 	}

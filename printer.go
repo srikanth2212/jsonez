@@ -11,7 +11,7 @@ import "strconv"
  */
 func printNumber(cur *GoJSON) []byte {
 
-	switch cur.jsontype {
+	switch cur.Jsontype {
 	case JSON_DOUBLE:
 		return []byte(strconv.FormatFloat(cur.valuedouble, 'E', -1, 64))
 
@@ -151,7 +151,7 @@ func printObject(cur *GoJSON, depth, fmt int) []byte {
 func printValue(cur *GoJSON, depth, fmt int) []byte {
 	var output []byte
 
-	switch cur.jsontype {
+	switch cur.Jsontype {
 	case JSON_NULL:
 		output = append(output, []byte("null")...)
 		return output

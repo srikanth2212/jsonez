@@ -38,7 +38,7 @@ type GoJSON struct {
 	child *GoJSON
 
 	/** JSON type */
-	jsontype int
+	Jsontype int
 
 	/**
 	 * valuestring will be set when
@@ -113,7 +113,7 @@ func parseString(cur *GoJSON, input []byte) ([]byte, error) {
 		}
 	}
 
-	cur.jsontype = JSON_STRING
+	cur.Jsontype = JSON_STRING
 	cur.valuestring = strings.Trim(string(input[1:offset]), " ")
 
 	return input[offset+1:], nil
@@ -201,10 +201,10 @@ func parseNumber(cur *GoJSON, input []byte) ([]byte, error) {
 
 	if isDouble == true {
 		cur.valuedouble = n
-		cur.jsontype = JSON_DOUBLE
+		cur.Jsontype = JSON_DOUBLE
 	} else {
 		cur.valueint = int(n)
-		cur.jsontype = JSON_INT
+		cur.Jsontype = JSON_INT
 	}
 
 	return input[offset:], nil
@@ -226,7 +226,7 @@ func parseArray(cur *GoJSON, input []byte) ([]byte, error) {
 		return []byte{}, errors.New(errorStr)
 	}
 
-	cur.jsontype = JSON_ARRAY
+	cur.Jsontype = JSON_ARRAY
 	input = nextToken(input[1:])
 
 	if len(input) == 0 {
@@ -310,7 +310,7 @@ func parseObject(cur *GoJSON, input []byte) ([]byte, error) {
 		return []byte{}, errors.New(errorStr)
 	}
 
-	cur.jsontype = JSON_OBJECT
+	cur.Jsontype = JSON_OBJECT
 	input = nextToken(input[1:])
 
 	if len(input) == 0 {
@@ -438,18 +438,18 @@ func parseValue(cur *GoJSON, input []byte) ([]byte, error) {
 	}
 
 	if strings.Compare(string(input[:4]), "null") == 0 {
-		cur.jsontype = JSON_NULL
+		cur.Jsontype = JSON_NULL
 		return input[4:], nil
 	}
 
 	if strings.Compare(string(input[:5]), "false") == 0 {
-		cur.jsontype = JSON_BOOL
+		cur.Jsontype = JSON_BOOL
 		cur.valuebool = false
 		return input[5:], nil
 	}
 
 	if strings.Compare(string(input[:4]), "true") == 0 {
-		cur.jsontype = JSON_BOOL
+		cur.Jsontype = JSON_BOOL
 		cur.valuebool = true
 		return input[4:], nil
 	}

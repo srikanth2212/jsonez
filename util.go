@@ -24,7 +24,7 @@ func funcName() string {
  */
 func AllocNull() *GoJSON {
 	child := new(GoJSON)
-	child.jsontype = JSON_NULL
+	child.Jsontype = JSON_NULL
 
 	return child
 }
@@ -38,7 +38,7 @@ func AllocString(val string) *GoJSON {
 	child := new(GoJSON)
 
 	child.valuestring = val
-	child.jsontype = JSON_STRING
+	child.Jsontype = JSON_STRING
 
 	return child
 }
@@ -49,7 +49,7 @@ func AllocString(val string) *GoJSON {
 func AllocBool(val bool) *GoJSON {
 	child := new(GoJSON)
 
-	child.jsontype = JSON_BOOL
+	child.Jsontype = JSON_BOOL
 	if val == false {
 		child.valuebool = false
 	} else {
@@ -67,10 +67,10 @@ func AllocNumber(val float64, numtype int) *GoJSON {
 
 	if numtype == JSON_INT {
 		child.valueint = int(val)
-		child.jsontype = JSON_INT
+		child.Jsontype = JSON_INT
 	} else {
 		child.valuedouble = val
-		child.jsontype = JSON_DOUBLE
+		child.Jsontype = JSON_DOUBLE
 	}
 
 	return child
@@ -82,7 +82,7 @@ func AllocNumber(val float64, numtype int) *GoJSON {
 func AllocArray() *GoJSON {
 	var child *GoJSON
 	child = new(GoJSON)
-	child.jsontype = JSON_ARRAY
+	child.Jsontype = JSON_ARRAY
 
 	return child
 }
@@ -93,7 +93,7 @@ func AllocArray() *GoJSON {
  */
 func AllocObject() *GoJSON {
 	child := new(GoJSON)
-	child.jsontype = JSON_OBJECT
+	child.Jsontype = JSON_OBJECT
 
 	return child
 }
