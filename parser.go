@@ -245,8 +245,8 @@ func parseArray(cur *GoJSON, input []byte) ([]byte, error) {
 	 * Allocate memory for the child to
 	 * continue processing
 	 */
-	cur.child = new(GoJSON)
-	child = cur.child
+	cur.Child = new(GoJSON)
+	child = cur.Child
 	input, err := parseValue(child, nextToken(input))
 
 	if err != nil {
@@ -266,8 +266,8 @@ func parseArray(cur *GoJSON, input []byte) ([]byte, error) {
 	for {
 		if input[0] == ',' {
 			sibling = new(GoJSON)
-			child.next = sibling
-			sibling.prev = child
+			child.Next = sibling
+			sibling.Prev = child
 			child = sibling
 
 			input, err = parseValue(child, nextToken(input[1:]))
@@ -329,8 +329,8 @@ func parseObject(cur *GoJSON, input []byte) ([]byte, error) {
 	 * Allocate memory for the child to
 	 * continue processing
 	 */
-	cur.child = new(GoJSON)
-	child = cur.child
+	cur.Child = new(GoJSON)
+	child = cur.Child
 	input, err := parseString(child, nextToken(input))
 
 	if err != nil {
@@ -374,8 +374,8 @@ func parseObject(cur *GoJSON, input []byte) ([]byte, error) {
 	for {
 		if input[0] == ',' {
 			sibling = new(GoJSON)
-			child.next = sibling
-			sibling.prev = child
+			child.Next = sibling
+			sibling.Prev = child
 			child = sibling
 
 			input, err = parseString(child, nextToken(input[1:]))

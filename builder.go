@@ -12,11 +12,11 @@ import (
 func (g *GoJSON) GetObjectEntry(key string) *GoJSON {
 	var child *GoJSON
 
-	child = g.child
+	child = g.Child
 
 	for {
 		if child != nil && strings.Compare(child.Key, key) != 0 {
-			child = child.next
+			child = child.Next
 		} else {
 			break
 		}
@@ -44,15 +44,15 @@ func (g *GoJSON) DelEntryFromObject(key string) error {
 	 * For first element, special processing needs
 	 * to be done
 	 */
-	if g.child.Key == key {
-		cur = g.child
-		g.child = cur.next
+	if g.Child.Key == key {
+		cur = g.Child
+		g.Child = cur.Next
 		cur = nil
 		return nil
 	}
 
-	prev = g.child
-	cur = prev.next
+	prev = g.Child
+	cur = prev.Next
 
 	for {
 		if cur == nil {
@@ -63,17 +63,17 @@ func (g *GoJSON) DelEntryFromObject(key string) error {
 			 * Check for last element in the list
 			 * and handle accordingly
 			 */
-			if cur.next == nil {
-				prev.next = nil
+			if cur.Next == nil {
+				prev.Next = nil
 			} else {
-				resolveLink(prev, cur.next)
+				resolveLink(prev, cur.Next)
 			}
 
 			cur = nil
 			break
 		} else {
 			prev = cur
-			cur = cur.next
+			cur = cur.Next
 		}
 	}
 	return nil
@@ -90,12 +90,12 @@ func (g *GoJSON) GetArraySize() int {
 	var child *GoJSON
 	var size int
 
-	child = g.child
+	child = g.Child
 
 	for {
 		if child != nil {
 			size++
-			child = child.next
+			child = child.Next
 		} else {
 			break
 		}
@@ -115,12 +115,12 @@ func (g *GoJSON) GetArrayElemByIndex(loc int) (*GoJSON, error) {
 		return nil, errors.New(errorStr)
 	}
 
-	child = g.child
+	child = g.Child
 
 	for {
 		if child != nil && loc > 0 {
 			loc--
-			child = child.next
+			child = child.Next
 		} else {
 			break
 		}
@@ -140,7 +140,7 @@ func (g *GoJSON) GetArrayEntry(val interface{}, Jsontype int) (*GoJSON, error) {
 		return nil, errors.New(errorStr)
 	}
 
-	child = g.child
+	child = g.Child
 
 	for {
 		if child != nil {
@@ -163,7 +163,7 @@ func (g *GoJSON) GetArrayEntry(val interface{}, Jsontype int) (*GoJSON, error) {
 				}
 
 			}
-			child = child.next
+			child = child.Next
 		} else {
 			errorStr := fmt.Sprintf("%s: Value not found", funcName())
 			return nil, errors.New(errorStr)
@@ -175,15 +175,15 @@ func (g *GoJSON) GetArrayEntry(val interface{}, Jsontype int) (*GoJSON, error) {
  * Function to add an entry to a GoJSON array object.
  */
 func (g *GoJSON) AddEntryToArray(entry *GoJSON) {
-	child := g.child
+	child := g.Child
 
 	if child == nil {
-		g.child = entry
-		entry.next = nil
+		g.Child = entry
+		entry.Next = nil
 	} else {
 		for {
-			if child != nil && child.next != nil {
-				child = child.next
+			if child != nil && child.Next != nil {
+				child = child.Next
 			} else {
 				break
 			}
@@ -204,16 +204,16 @@ func (g *GoJSON) DelIndexFromArray(index int) error {
 	var i int = 1
 
 	if index == 0 {
-		cur = g.child
-		g.child = cur.next
+		cur = g.Child
+		g.Child = cur.Next
 		cur = nil
 		return nil
 	} else if index >= size {
 		errorStr := fmt.Sprintf("%s: Index exceeds array size of %d", funcName(), size)
 		return errors.New(errorStr)
 	} else {
-		prev = g.child
-		cur = prev.next
+		prev = g.Child
+		cur = prev.Next
 
 		for {
 			if i == index {
@@ -221,16 +221,16 @@ func (g *GoJSON) DelIndexFromArray(index int) error {
 				 * Check for last element in the list
 				 * and handle accordingly
 				 */
-				if cur.next == nil {
-					prev.next = nil
+				if cur.Next == nil {
+					prev.Next = nil
 				} else {
-					resolveLink(prev, cur.next)
+					resolveLink(prev, cur.Next)
 				}
 				cur = nil
 				break
 			} else {
 				prev = cur
-				cur = cur.next
+				cur = cur.Next
 				i++
 			}
 		}
@@ -249,7 +249,7 @@ func (g *GoJSON) DelArrayEntry(val interface{}, Jsontype int) error {
 		return err
 	}
 
-	elem.prev.next = elem.next
+	elem.Prev.Next = elem.Next
 	elem = nil
 
 	return nil

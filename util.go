@@ -104,8 +104,8 @@ func AllocObject() *GoJSON {
  * object.
  */
 func resolveLink(prev *GoJSON, cur *GoJSON) {
-	prev.next = cur
-	cur.prev = prev
+	prev.Next = cur
+	cur.Prev = prev
 }
 
 /**

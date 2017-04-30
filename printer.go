@@ -33,7 +33,7 @@ func printArray(cur *GoJSON, depth, fmt int) []byte {
 	/*
 	 * Get the child count
 	 */
-	for child = cur.child; child != nil; child = child.next {
+	for child = cur.Child; child != nil; child = child.Next {
 		entryCount++
 	}
 
@@ -44,7 +44,7 @@ func printArray(cur *GoJSON, depth, fmt int) []byte {
 	/*
 	 * Print the child entries
 	 */
-	child = cur.child
+	child = cur.Child
 	output = append(output, '[', '\n')
 
 	for i := 0; i < entryCount; i++ {
@@ -65,7 +65,7 @@ func printArray(cur *GoJSON, depth, fmt int) []byte {
 
 		output = append(output, '\n')
 
-		child = child.next
+		child = child.Next
 	}
 
 	if fmt != 0 {
@@ -90,7 +90,7 @@ func printObject(cur *GoJSON, depth, fmt int) []byte {
 	/*
 	 * Get the child count
 	 */
-	for child = cur.child; child != nil; child = child.next {
+	for child = cur.Child; child != nil; child = child.Next {
 		entryCount++
 	}
 
@@ -101,7 +101,7 @@ func printObject(cur *GoJSON, depth, fmt int) []byte {
 		/*
 		 * Walk the child entries
 		 */
-		child = cur.child
+		child = cur.Child
 
 		for i := 0; i < entryCount && child != nil; i++ {
 			if fmt != 0 {
@@ -130,7 +130,7 @@ func printObject(cur *GoJSON, depth, fmt int) []byte {
 				output = append(output, '\n')
 			}
 
-			child = child.next
+			child = child.Next
 		}
 	}
 
