@@ -30,12 +30,12 @@ type GoJSON struct {
 	/**
 	 * Pointers to walk array/object chains
 	 */
-	next, prev *GoJSON
+	Next, Prev *GoJSON
 
 	/**
 	 * Child item of the current object
 	 */
-	child *GoJSON
+	Child *GoJSON
 
 	/** JSON type */
 	Jsontype int
