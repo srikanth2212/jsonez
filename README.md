@@ -65,7 +65,7 @@ err = g.AddVal(true, "outer", "val9")
 Adding an array:
 ```
 /*
- * The API will create the array object val10 and
+ * The API will create the array object outer and
  * populates 100 as its first element
  */
 err = g.AddToArray(100, "outer", "val10")
