@@ -59,26 +59,237 @@ func TestSimpleParse(t *testing.T) {
 		t.Errorf("%s: GetIntVal for key val1 didn't fail as expected", funcName())
 	}
 
-	i, err := g.GetIntVal("outer", "val3")
+	i, err := g.GetUIntVal("outer", "val3")
 	if err != nil {
-		t.Errorf("%s: GetIntVal for key val3 failed with error %s", funcName(), err)
+		t.Errorf("%s: GetUIntVal for key val3 failed with error %s", funcName(), err)
 	} else if i != 1234 {
-		t.Errorf("%s: GetIntVal for key val3 returned %d while expected value was 1234", funcName(), i)
+		t.Errorf("%s: GetUIntVal for key val3 returned %d while expected value was 1234", funcName(), i)
+	} else {
+		t.Logf("%s: GetUIntVal for key val3 returned 1234 as expected", funcName())
+
 	}
 
 	d, err := g.GetDoubleVal("outer", "val4")
 	if err != nil {
-		t.Errorf("%s: GetIntVal for key val4 failed with error %s", funcName(), err)
+		t.Errorf("%s: GetDoubleVal for key val4 failed with error %s", funcName(), err)
 	} else if d != 225.1245 {
-		t.Errorf("%s: GetIntVal for key val4 returned %f while expected value was 225.1245", funcName(), d)
+		t.Errorf("%s: GetDoubleVal for key val4 returned %f while expected value "+
+			"was 225.1245", funcName(), d)
+	} else {
+		t.Logf("%s: GetDoubleVal for key val4 returned 225.1245 as expected",
+			funcName())
 	}
 
 	a, err := g.Get("outer", "val5")
 	if a.GetArraySize() != 5 {
-		t.Errorf("%s: Arraysize of the object with key val5 returned %d while expected value was 5", funcName(), a.GetArraySize())
+		t.Errorf("%s: Arraysize of the object with key val5 returned %d while "+
+			"expected value was 5", funcName(), a.GetArraySize())
+	} else {
+		t.Logf("%s: Arraysize of the object with key val5 returned 5 as expected",
+			funcName())
 	}
 
 	return
+}
+
+func TestBuilder(t *testing.T) {
+	input := []byte(`{
+"outer":  {
+"val1": "foo",
+"val2": "bar",
+"val3": 1234,
+"val4": 225.1245,
+"val5": [
+1,
+2,
+3,
+4,
+5
+]
+}
+}`)
+
+	g, err := GoJSONParse(input)
+
+	if err != nil {
+		t.Errorf("%s: GoJSONParse failed with error %s", funcName(), err)
+		return
+	} else {
+		t.Logf("%s: GoJSONParse completed", funcName())
+	}
+
+	err = g.AddVal(100, "outer", "val6")
+	if err != nil {
+		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
+	}
+
+	v, err := g.GetUIntVal("outer", "val6")
+	if err != nil {
+		t.Errorf("%s: Searching for key val6 within outer failed with error %s", funcName(), err)
+	} else if v != 100 {
+		t.Errorf("%s: Val6 returned %d while expected was 100", funcName(), v)
+	} else {
+		t.Logf("%s: key val6 was found within outer and returned 100", funcName())
+	}
+
+	fmt.Println("printing after adding val6")
+	fmt.Println(string(GoJSONPrint(g)))
+
+	err = g.AddVal(245.67, "outer", "val7")
+	if err != nil {
+		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
+	}
+
+	vd, err := g.GetDoubleVal("outer", "val7")
+	if err != nil {
+		t.Errorf("%s: Searching for key val7 within outer failed with error %s",
+			funcName(), err)
+	} else if vd != 245.67 {
+		t.Errorf("%s: Val6 returned %f while expected was 100", funcName(), vd)
+	} else {
+		t.Logf("%s: key val6 was found within outer and returned 100", funcName())
+	}
+
+	err = g.AddVal("hello world", "outer", "val8")
+	if err != nil {
+		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
+	}
+
+	_, err = g.Get("outer", "val8")
+	if err != nil {
+		t.Errorf("%s: Searching for key val8 within outer failed with error %s", funcName(), err)
+	} else {
+		t.Logf("%s: key val8 found within outer", funcName())
+	}
+
+	err = g.AddVal(true, "outer", "val9")
+	if err != nil {
+		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
+	}
+
+	_, err = g.Get("outer", "val9")
+	if err != nil {
+		t.Errorf("%s: Searching for key val8 within outer failed with error %s", funcName(), err)
+	} else {
+		t.Logf("%s: key val9 found within outer", funcName())
+	}
+
+	err = g.AddToArray(100, "outer", "val10")
+	if err != nil {
+		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
+	}
+
+	_, err = g.Get("outer", "val10")
+	if err != nil {
+		t.Errorf("%s: Searching for key val10 within outer failed with error %s",
+			funcName(), err)
+	} else {
+		t.Logf("%s: key val10 found within outer", funcName())
+	}
+	fmt.Println("printing after adding val10")
+	fmt.Println(string(GoJSONPrint(g)))
+
+	err = g.AddToArray(200.25, "outer", "val10")
+	if err != nil {
+		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
+	}
+
+	_, err = g.Get("outer", "val10")
+	if err != nil {
+		t.Errorf("%s: Searching for key val10 within outer failed with error %s",
+			funcName(), err)
+	} else {
+		t.Logf("%s: key val10 found within outer", funcName())
+	}
+
+	err = g.AddToArray("hello world", "outer", "val10")
+	if err != nil {
+		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
+	}
+
+	_, err = g.Get("outer", "val10")
+	if err != nil {
+		t.Errorf("%s: Searching for key val10 within outer failed with error %s",
+			funcName(), err)
+	} else {
+		t.Logf("%s: key val10 found within outer", funcName())
+	}
+
+	err = g.AddToArray(true, "outer", "val10")
+	if err != nil {
+		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
+	}
+
+	arr, err := g.Get("outer", "val10")
+	if err != nil {
+		t.Errorf("%s: Searching for key val10 within outer failed with error %s",
+			funcName(), err)
+	} else {
+		t.Logf("%s: key val10 found within outer", funcName())
+	}
+
+	entry, err := arr.GetArrayElemByIndex(1)
+
+	if err != nil {
+		t.Errorf("%s: Searching for array entry at location 1 failed with error %s", funcName(), err)
+	} else if entry.Valdouble != 200.25 {
+		t.Errorf("%s: Array entry at location is %f while expeced is 200.25", funcName(), entry.Valdouble)
+	} else {
+		t.Logf("%s Value 200.25 found at location 1", funcName())
+	}
+
+	fmt.Println(string(GoJSONPrint(g)))
+
+	err = arr.DelIndexFromArray(3)
+	if err != nil {
+		t.Errorf("%s: Deleting element at location 2 failed with error %s", funcName(), err)
+	} else {
+		t.Logf("%s: Deleted element at location 2", funcName())
+	}
+
+	fmt.Println(string(GoJSONPrint(g)))
+
+	err = arr.DelIndexFromArray(10)
+	if err != nil {
+		t.Logf("%s: Deleting element at location 10 failed as expected with error %s", funcName(), err)
+	} else {
+		t.Errorf("%s: Deleting element at location 10 didn't fail as expected", funcName())
+	}
+
+	_, err = g.Get("outer")
+	if err != nil {
+		t.Errorf("%s: Error fetching object outer", funcName())
+	}
+
+	fmt.Println(string(GoJSONPrint(g)))
+
+	err = g.DelFromArray(3, "outer", "val5")
+	if err != nil {
+		t.Errorf("%s: Deleting entry 3 within val5 failed with error %s", funcName(), err)
+	}
+
+	err = g.DelVal("outer", "val10")
+
+	err = g.AddVal(-15, "outer", "val11")
+
+	fmt.Println(string(GoJSONPrint(g)))
+
+	v1, err := g.GetIntVal("outer", "val11")
+	if err != nil {
+		t.Errorf("%s: Fetching val11 failed with error %s", funcName(), err)
+	} else if v1 != -15 {
+		t.Errorf("%s: val11 doesn't have -15 as value", funcName())
+	} else {
+		t.Logf("%s: val11 has -15 as expected", funcName())
+	}
+	/*
+	   if err != nil {
+	   t.Logf("%s: Deleting child object failed as expected with error %s", funcName(), err)
+	   } else {
+	   t.Errorf("%s: Deleting child object did not fail as expected", funcName())
+	   }
+	*/
+
 }
 
 func TestComplexParse(t *testing.T) {
@@ -500,178 +711,4 @@ func TestComplexParse(t *testing.T) {
 	}
 
 	return
-}
-
-func TestBuilder(t *testing.T) {
-	input := []byte(`{
-		"outer":	{
-			"val1":	"foo",
-			"val2":	"bar",
-			"val3":	1234,
-			"val4":	225.1245,
-			"val5":	[
-				1,
-				2,
-				3,
-				4,
-				5
-			]
-		}
-	}`)
-
-	g, err := GoJSONParse(input)
-
-	if err != nil {
-		t.Errorf("%s: GoJSONParse failed with error %s", funcName(), err)
-		return
-	}
-
-	err = g.AddVal(100, "outer", "val6")
-	if err != nil {
-		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
-	}
-
-	_, err = g.Get("outer", "val6")
-	if err != nil {
-		t.Errorf("%s: Searching for key val6 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val6 found within outer", funcName())
-	}
-
-	err = g.AddVal(245.67, "outer", "val7")
-	if err != nil {
-		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
-	}
-
-	_, err = g.Get("outer", "val7")
-	if err != nil {
-		t.Errorf("%s: Searching for key val7 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val7 found within outer", funcName())
-	}
-
-	err = g.AddVal("hello world", "outer", "val8")
-	if err != nil {
-		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
-	}
-
-	_, err = g.Get("outer", "val8")
-	if err != nil {
-		t.Errorf("%s: Searching for key val8 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val8 found within outer", funcName())
-	}
-
-	err = g.AddVal(true, "outer", "val9")
-	if err != nil {
-		t.Errorf("%s: AddVal failed with error %s", funcName(), err)
-	}
-
-	_, err = g.Get("outer", "val9")
-	if err != nil {
-		t.Errorf("%s: Searching for key val8 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val9 found within outer", funcName())
-	}
-
-	err = g.AddToArray(100, "outer", "val10")
-	if err != nil {
-		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
-	}
-
-	_, err = g.Get("outer", "val10")
-	if err != nil {
-		t.Errorf("%s: Searching for key val10 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val10 found within outer", funcName())
-	}
-
-	err = g.AddToArray(200.25, "outer", "val10")
-	if err != nil {
-		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
-	}
-
-	_, err = g.Get("outer", "val10")
-	if err != nil {
-		t.Errorf("%s: Searching for key val10 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val10 found within outer", funcName())
-	}
-
-	err = g.AddToArray("hello world", "outer", "val10")
-	if err != nil {
-		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
-	}
-
-	_, err = g.Get("outer", "val10")
-	if err != nil {
-		t.Errorf("%s: Searching for key val10 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val10 found within outer", funcName())
-	}
-
-	err = g.AddToArray(true, "outer", "val10")
-	if err != nil {
-		t.Errorf("%s: AddToArray failed with error %s", funcName(), err)
-	}
-
-	arr, err := g.Get("outer", "val10")
-	if err != nil {
-		t.Errorf("%s: Searching for key val10 within outer failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: key val10 found within outer", funcName())
-	}
-
-	entry, err := arr.GetArrayElemByIndex(1)
-
-	if err != nil {
-		t.Errorf("%s: Searching for array entry at location 1 failed with error %s", funcName(), err)
-	} else if entry.Valdouble != 200.25 {
-		t.Errorf("%s: Array entry at location is %f while expeced is 200.25", funcName(), entry.Valdouble)
-	} else {
-		t.Logf("%s Value 200.25 found at location 1", funcName())
-	}
-
-	fmt.Println(string(GoJSONPrint(g)))
-
-	err = arr.DelIndexFromArray(3)
-	if err != nil {
-		t.Errorf("%s: Deleting element at location 2 failed with error %s", funcName(), err)
-	} else {
-		t.Logf("%s: Deleted element at location 2", funcName())
-	}
-
-	fmt.Println(string(GoJSONPrint(g)))
-
-	err = arr.DelIndexFromArray(10)
-	if err != nil {
-		t.Logf("%s: Deleting element at location 10 failed as expected with error %s", funcName(), err)
-	} else {
-		t.Errorf("%s: Deleting element at location 10 didn't fail as expected", funcName())
-	}
-
-	_, err = g.Get("outer")
-	if err != nil {
-		t.Errorf("%s: Error fetching object outer", funcName())
-	}
-
-	err = g.DelFromArray(3, "outer", "val5")
-	if err != nil {
-		t.Errorf("%s: Deleting entry 10 within val5 failed with error %s", funcName(), err)
-	}
-
-	fmt.Println(string(GoJSONPrint(g)))
-
-	err = g.DelVal("outer", "val10")
-
-	fmt.Println(string(GoJSONPrint(g)))
-
-	/*
-		if err != nil {
-			t.Logf("%s: Deleting child object failed as expected with error %s", funcName(), err)
-		} else {
-			t.Errorf("%s: Deleting child object did not fail as expected", funcName())
-		}
-	*/
-
 }

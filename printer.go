@@ -17,6 +17,9 @@ func printNumber(cur *GoJSON) []byte {
 
 	case JSON_INT:
 		return []byte(strconv.FormatInt(int64(cur.Valint), 10))
+
+	case JSON_UINT:
+		return []byte(strconv.FormatUint(cur.Valuint, 10))
 	}
 
 	return []byte{}
@@ -165,6 +168,8 @@ func printValue(cur *GoJSON, depth, fmt int) []byte {
 		return output
 
 	case JSON_INT:
+		fallthrough
+	case JSON_UINT:
 		fallthrough
 	case JSON_DOUBLE:
 		output = append(output, printNumber(cur)...)

@@ -134,6 +134,7 @@ func (g *GoJSON) GetArrayElemByIndex(loc int) (*GoJSON, error) {
  */
 func (g *GoJSON) GetArrayEntry(val interface{}, Jsontype int) (*GoJSON, error) {
 	var child *GoJSON
+	var jtype string
 
 	if g.Jsontype != JSON_ARRAY {
 		errorStr := fmt.Sprintf("%s: Parsing Error", funcName())
@@ -146,26 +147,36 @@ func (g *GoJSON) GetArrayEntry(val interface{}, Jsontype int) (*GoJSON, error) {
 		if child != nil {
 			switch Jsontype {
 			case JSON_INT:
-				if child.Valint == val.(int) {
+				if child.Valint == int64(val.(int)) {
 					return child, nil
 				}
+				jtype = "JSON_INT"
+			case JSON_UINT:
+				if child.Valuint == uint64(val.(uint)) {
+					return child, nil
+				}
+				jtype = "JSON_UINT"
 			case JSON_DOUBLE:
 				if child.Valdouble == val.(float64) {
 					return child, nil
 				}
+				jtype = "JSON_DOUBLE"
 			case JSON_BOOL:
 				if child.Valbool == val.(bool) {
 					return child, nil
 				}
+				jtype = "JSON_BOOL"
 			case JSON_STRING:
 				if child.Valstr == val.(string) {
 					return child, nil
 				}
+				jtype = "JSON_STRING"
 
 			}
 			child = child.Next
 		} else {
-			errorStr := fmt.Sprintf("%s: Value not found", funcName())
+			errorStr := fmt.Sprintf("%s: Value not found for type %s",
+				funcName(), jtype)
 			return nil, errors.New(errorStr)
 		}
 	}
@@ -277,7 +288,7 @@ func (g *GoJSON) Get(keys ...string) (*GoJSON, error) {
  * Functions to query the tree based on a path and
  * get the integer value of the key if exists
  */
-func (g *GoJSON) GetIntVal(keys ...string) (int, error) {
+func (g *GoJSON) GetIntVal(keys ...string) (int64, error) {
 	var cur *GoJSON = g
 	for _, key := range keys {
 		cur = cur.GetObjectEntry(key)
@@ -294,6 +305,29 @@ func (g *GoJSON) GetIntVal(keys ...string) (int, error) {
 	}
 
 	return cur.Valint, nil
+}
+
+/**
+ * Functions to query the tree based on a path and
+ * get the unsigned integer value of the key if exists
+ */
+func (g *GoJSON) GetUIntVal(keys ...string) (uint64, error) {
+	var cur *GoJSON = g
+	for _, key := range keys {
+		cur = cur.GetObjectEntry(key)
+
+		if cur == nil {
+			errorStr := fmt.Sprintf("%s: Path not found", funcName())
+			return 0, errors.New(errorStr)
+		}
+	}
+
+	if cur.Jsontype != JSON_UINT {
+		errorStr := fmt.Sprintf("%s: key %s is not of type uint", funcName(), cur.Key)
+		return 0, errors.New(errorStr)
+	}
+
+	return cur.Valuint, nil
 }
 
 /**
@@ -402,7 +436,15 @@ func (g *GoJSON) AddVal(val interface{}, paths ...string) error {
 
 	switch t {
 	case JSON_INT:
-		cur = AllocNumber(float64(val.(int)), JSON_INT)
+		if val.(int) < 0 {
+			cur = AllocNumber(float64(val.(int)), JSON_INT)
+		} else {
+			cur = AllocNumber(float64(uint(val.(int))), JSON_UINT)
+		}
+
+		prev.AddEntryToObject(key, cur)
+	case JSON_UINT:
+		cur = AllocNumber(float64(val.(uint)), JSON_UINT)
 		prev.AddEntryToObject(key, cur)
 	case JSON_DOUBLE:
 		cur = AllocNumber(val.(float64), JSON_DOUBLE)
@@ -467,7 +509,14 @@ func (g *GoJSON) AddToArray(val interface{}, paths ...string) error {
 
 	switch t {
 	case JSON_INT:
-		cur = AllocNumber(float64(val.(int)), JSON_INT)
+		if val.(int) < 0 {
+			cur = AllocNumber(float64(val.(int)), JSON_INT)
+		} else {
+			cur = AllocNumber(float64(uint(val.(int))), JSON_UINT)
+		}
+		arr.AddEntryToArray(cur)
+	case JSON_UINT:
+		cur = AllocNumber(float64(val.(int)), JSON_UINT)
 		arr.AddEntryToArray(cur)
 	case JSON_DOUBLE:
 		cur = AllocNumber(val.(float64), JSON_DOUBLE)
@@ -552,7 +601,14 @@ func (g *GoJSON) DelFromArray(val interface{}, paths ...string) error {
 
 	switch t {
 	case JSON_INT:
-		return cur.DelArrayEntry(val, JSON_INT)
+		if val.(int) < 0 {
+			return cur.DelArrayEntry(val, JSON_INT)
+		} else {
+			return cur.DelArrayEntry(uint(val.(int)), JSON_UINT)
+		}
+
+	case JSON_UINT:
+		return cur.DelArrayEntry(val, JSON_UINT)
 
 	case JSON_DOUBLE:
 		return cur.DelArrayEntry(val, JSON_DOUBLE)

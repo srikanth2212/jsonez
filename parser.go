@@ -15,6 +15,7 @@ const (
 	JSON_BOOL = iota
 	JSON_NULL
 	JSON_INT
+	JSON_UINT
 	JSON_DOUBLE
 	JSON_STRING
 	JSON_ARRAY
@@ -50,7 +51,13 @@ type GoJSON struct {
 	 * Valint will be set when type
 	 * is JSON_INT
 	 */
-	Valint int
+	Valint int64
+
+	/**
+	 * Valuint will be set when type
+	 * is JSON_UINT
+	 */
+	Valuint uint64
 
 	/**
 	 * valuenum will be set when
@@ -202,9 +209,12 @@ func parseNumber(cur *GoJSON, input []byte) ([]byte, error) {
 	if isDouble == true {
 		cur.Valdouble = n
 		cur.Jsontype = JSON_DOUBLE
-	} else {
-		cur.Valint = int(n)
+	} else if sign == -1 {
+		cur.Valint = int64(n)
 		cur.Jsontype = JSON_INT
+	} else {
+		cur.Valuint = uint64(n)
+		cur.Jsontype = JSON_UINT
 	}
 
 	return input[offset:], nil

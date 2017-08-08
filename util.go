@@ -66,8 +66,11 @@ func AllocNumber(val float64, numtype int) *GoJSON {
 	child := new(GoJSON)
 
 	if numtype == JSON_INT {
-		child.Valint = int(val)
+		child.Valint = int64(val)
 		child.Jsontype = JSON_INT
+	} else if numtype == JSON_UINT {
+		child.Valuint = uint64(val)
+		child.Jsontype = JSON_UINT
 	} else {
 		child.Valdouble = val
 		child.Jsontype = JSON_DOUBLE
@@ -115,6 +118,8 @@ func resolveInterface(v interface{}) (int, error) {
 	switch v.(type) {
 	case int:
 		return JSON_INT, nil
+	case uint:
+		return JSON_UINT, nil
 	case float64:
 		return JSON_DOUBLE, nil
 	case bool:
