@@ -127,15 +127,15 @@ func resolveInterface(v interface{}) (int, error) {
 	case int64:
 		return JSON_INT, nil
 	case uint:
-		return JSON_UINT, nil
+		return JSON_INT, nil
 	case uint8:
-		return JSON_UINT, nil
+		return JSON_INT, nil
 	case uint16:
-		return JSON_UINT, nil
+		return JSON_INT, nil
 	case uint32:
-		return JSON_UINT, nil
+		return JSON_INT, nil
 	case uint64:
-		return JSON_UINT, nil
+		return JSON_INT, nil
 	case float64:
 		return JSON_DOUBLE, nil
 	case bool:
