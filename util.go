@@ -118,8 +118,24 @@ func resolveInterface(v interface{}) (int, error) {
 	switch v.(type) {
 	case int:
 		return JSON_INT, nil
+	case int8:
+		return JSON_INT, nil
+	case int16:
+		return JSON_INT, nil
+	case int32:
+		return JSON_INT, nil
+	case int64:
+		return JSON_INT, nil
 	case uint:
-		return JSON_UINT, nil
+		return JSON_INT, nil
+	case uint8:
+		return JSON_INT, nil
+	case uint16:
+		return JSON_INT, nil
+	case uint32:
+		return JSON_INT, nil
+	case uint64:
+		return JSON_INT, nil
 	case float64:
 		return JSON_DOUBLE, nil
 	case bool:
