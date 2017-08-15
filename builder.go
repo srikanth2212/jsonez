@@ -3,6 +3,7 @@ package jsonez
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -436,15 +437,17 @@ func (g *GoJSON) AddVal(val interface{}, paths ...string) error {
 
 	switch t {
 	case JSON_INT:
+		v := reflect.ValueOf(val)
 		if val.(int) < 0 {
-			cur = AllocNumber(float64(val.(int)), JSON_INT)
+			cur = AllocNumber(float64(v.Int()), JSON_INT)
 		} else {
-			cur = AllocNumber(float64(uint(val.(int))), JSON_UINT)
+			cur = AllocNumber(float64(uint64(v.Int())), JSON_UINT)
 		}
 
 		prev.AddEntryToObject(key, cur)
 	case JSON_UINT:
-		cur = AllocNumber(float64(val.(uint)), JSON_UINT)
+		v := reflect.ValueOf(val)
+		cur = AllocNumber(float64(v.Uint()), JSON_UINT)
 		prev.AddEntryToObject(key, cur)
 	case JSON_DOUBLE:
 		cur = AllocNumber(val.(float64), JSON_DOUBLE)
@@ -509,14 +512,16 @@ func (g *GoJSON) AddToArray(val interface{}, paths ...string) error {
 
 	switch t {
 	case JSON_INT:
+		v := reflect.ValueOf(val)
 		if val.(int) < 0 {
-			cur = AllocNumber(float64(val.(int)), JSON_INT)
+			cur = AllocNumber(float64(v.Int()), JSON_INT)
 		} else {
-			cur = AllocNumber(float64(uint(val.(int))), JSON_UINT)
+			cur = AllocNumber(float64(uint64(v.Int())), JSON_UINT)
 		}
 		arr.AddEntryToArray(cur)
 	case JSON_UINT:
-		cur = AllocNumber(float64(val.(int)), JSON_UINT)
+		v := reflect.ValueOf(val)
+		cur = AllocNumber(float64(v.Uint()), JSON_UINT)
 		arr.AddEntryToArray(cur)
 	case JSON_DOUBLE:
 		cur = AllocNumber(val.(float64), JSON_DOUBLE)
