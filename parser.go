@@ -442,23 +442,26 @@ func parseObject(cur *GoJSON, input []byte) ([]byte, error) {
  */
 func parseValue(cur *GoJSON, input []byte) ([]byte, error) {
 	input = nextToken(input)
-	if len(input) == 0 {
-		errorStr := fmt.Sprintf("%s: Byte slice is empty", funcName())
-		return []byte{}, errors.New(errorStr)
+        length := len(input)
+
+	if length == 0 {
+            cur.Jsontype = JSON_NULL
+            return input[:], nil
 	}
 
-	if strings.Compare(string(input[:4]), "null") == 0 {
+	if length >= 4 &&
+        strings.Compare(string(input[:4]), "null") == 0 {
 		cur.Jsontype = JSON_NULL
 		return input[4:], nil
 	}
 
-	if strings.Compare(string(input[:5]), "false") == 0 {
+	if length >= 5 && strings.Compare(string(input[:5]), "false") == 0 {
 		cur.Jsontype = JSON_BOOL
 		cur.Valbool = false
 		return input[5:], nil
 	}
 
-	if strings.Compare(string(input[:4]), "true") == 0 {
+	if length >= 4 && strings.Compare(string(input[:4]), "true") == 0 {
 		cur.Jsontype = JSON_BOOL
 		cur.Valbool = true
 		return input[4:], nil
